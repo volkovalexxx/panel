@@ -7,7 +7,7 @@ if (!$templateId) {
 }
 
 // URL вашего бэкенда
-$backendUrl = 'http://your-backend-url'; // Укажите правильный URL вашего бэкенда
+$backendUrl = 'https://agile-creation-main.up.railway.app/'; // Укажите правильный URL вашего бэкенда
 
 // 1. Запрос к эндпоинту /links для получения номера шаблона
 $response = file_get_contents("{$backendUrl}/links");
