@@ -9,7 +9,11 @@ const cors = require('cors');
 
 const app = express();
 const PORT = 3000;
-app.use(cors()); // Используйте CORS middleware
+app.use(cors({
+    origin: 'https://panel.support-lnnago.com', // Укажите разрешенный источник
+    methods: ['GET', 'POST', 'DELETE'], // Укажите разрешенные методы
+    allowedHeaders: ['Content-Type'], // Укажите разрешенные заголовки
+}));
 app.use(bodyParser.json());
 
 const jsonFilePath = path.join(__dirname, 'domains.json');
