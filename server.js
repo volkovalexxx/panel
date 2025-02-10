@@ -355,7 +355,7 @@ app.get('/download-php', (req, res) => {
             }
 
             // Заменяем строку с $backendUrl на актуальный адрес
-            const backendUrl = 'http://your-backend-url'; // Укажите актуальный адрес
+            const backendUrl = 'https://agile-creation-main.up.railway.app/'; // Укажите актуальный адрес
             const updatedData = data.replace(/(\\$backendUrl = ')(.*?)(';)/, `$1${backendUrl}$3`);
 
             // Записываем обновленное содержимое во временный файл
