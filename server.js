@@ -235,9 +235,11 @@ app.get('/links', (req, res) => {
 
 
 app.post('/add-template', upload.single('template'), (req, res) => {
+    // Определяем путь к загруженному файлу
     const zipFilePath = path.join(templatesDir, req.file.filename);
 
-    if (!req.file || req.file.mimetype !== 'application/zip' || req.file.mimetype !== 'application/x-zip-compressed') {
+    // Проверяем, что файл загружен и его MIME-тип соответствует ZIP
+    if (!req.file || (req.file.mimetype !== 'application/zip' && req.file.mimetype !== 'application/x-zip-compressed')) {
         console.error('Uploaded file is not a valid ZIP archive.');
         return res.status(400).send('Что-то пошло не так: загруженный файл не является ZIP-архивом.');
     }
@@ -263,6 +265,7 @@ app.post('/add-template', upload.single('template'), (req, res) => {
         const newZipFileName = `${templateId}.zip`;
         const newZipFilePath = path.join(outputDir, newZipFileName);
 
+        // Перемещаем загруженный ZIP-файл в новую директорию
         fs.rename(zipFilePath, newZipFilePath, (err) => {
             if (err) {
                 console.error('Error moving the zip file:', err);
