@@ -1,15 +1,1 @@
-[
-  {
-    "id": "f0737aff-9106-4e58-8e12-200686c14a49",
-    "link": "example.com/?id=f0737aff-9106-4e58-8e12-200686c14a49",
-    "domain": "example.com",
-    "addedOn": "2025-02-10"
-  },
-  {
-    "id": "1ef0702e-93b1-4150-af39-750896c7e31e",
-    "link": "example.com/?id=1ef0702e-93b1-4150-af39-750896c7e31e&templateId=1",
-    "domain": "example.com",
-    "templateId": 1,
-    "addedOn": "2025-02-10"
-  }
-]
+[]
