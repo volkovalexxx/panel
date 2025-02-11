@@ -10,6 +10,14 @@ const { v4: uuidv4 } = require('uuid');
 const app = express();
 const PORT = 3000;
 
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*'); // Разрешить все источники
+    res.header('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS'); // Разрешенные методы
+    res.header('Access-Control-Allow-Headers', 'Content-Type'); // Разрешенные заголовки
+    next();
+});
+
+
 app.use(bodyParser.json());
 
 const jsonFilePath = path.join(__dirname, 'domains.json');
