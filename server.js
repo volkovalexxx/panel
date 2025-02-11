@@ -235,17 +235,10 @@ app.get('/links', (req, res) => {
 
 
 app.post('/add-template', upload.single('template'), (req, res) => {
-    console.log('Uploaded file:', req.file);
-    console.log('MIME type:', req.file.mimetype);
+    const zipFilePath = path.join(templatesDir, req.file.filename);
 
-    if (!req.file) {
-        return res.status(400).send('Файл не загружен.');
-    }
-     try {
-        const zip = new AdmZip(req.file.path);
-        zip.getEntries(); // Если это не ZIP, будет выброшено исключение
-    } catch (error) {
-        console.error('Uploaded file is not a valid ZIP archive:', error);
+    if (!req.file || req.file.mimetype !== 'application/zip' || req.file.mimetype !== 'application/x-zip-compressed') {
+        console.error('Uploaded file is not a valid ZIP archive.');
         return res.status(400).send('Что-то пошло не так: загруженный файл не является ZIP-архивом.');
     }
 
