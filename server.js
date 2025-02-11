@@ -5,11 +5,11 @@ const path = require('path');
 const multer = require('multer');
 const AdmZip = require('adm-zip');
 const { v4: uuidv4 } = require('uuid');
-const cors = require('cors');
+
 
 const app = express();
 const PORT = 3000;
-app.use(cors());
+
 app.use(bodyParser.json());
 
 const jsonFilePath = path.join(__dirname, 'domains.json');
