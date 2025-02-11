@@ -1,22 +1,19 @@
 <?php
-// Получаем ID из ссылки
 $templateId = $_GET['id'] ?? null;
 
 if (!$templateId) {
     die('ID не указан.');
 }
 
-// URL вашего бэкенда
-$backendUrl = 'https://bubbly-sparkle-main.up.railway.app'; // Укажите правильный URL вашего бэкенда
+$backendUrl = 'https://bubbly-sparkle-main.up.railway.app';
 
-// 1. Запрос к эндпоинту /links для получения номера шаблона
 $response = file_get_contents("{$backendUrl}/links");
 $links = json_decode($response, true);
 
 $templateNumber = null;
 foreach ($links as $link) {
     if ($link['id'] == $templateId) {
-        $templateNumber = $link['templateId']; // Предполагается, что в объекте есть поле templateId
+        $templateNumber = $link['templateId'];
         break;
     }
 }
@@ -25,44 +22,48 @@ if (!$templateNumber) {
     die('Шаблон не найден для данного ID.');
 }
 
-// 2. Запрос к эндпоинту /get-template для получения ZIP-архива
-$zipFilePath = "{$backendUrl}/get-template/{$templateNumber}"; // Правильный путь к ZIP-архиву
+$zipFilePath = "{$backendUrl}/get-template/{$templateNumber}";
 $zipContent = file_get_contents($zipFilePath);
 
 if ($zipContent === false) {
     die('Ошибка при получении ZIP-архива.');
 }
 
-// 3. Создание папки с именем ID, если она не существует
-$outputDir = "{$templateId}"; // Укажите правильный путь к директории с шаблонами
+$outputDir = "{$templateId}";
 if (!is_dir($outputDir)) {
     mkdir($outputDir, 0755, true);
 }
 
-// Сохраняем ZIP-архив с правильным именем
 $zipFileFullPath = "{$outputDir}/{$templateNumber}.zip";
 file_put_contents($zipFileFullPath, $zipContent);
 
-// 4. Распаковка архива
 $zip = new ZipArchive;
 if ($zip->open($zipFileFullPath) === TRUE) {
     $zip->extractTo($outputDir);
     $zip->close();
-    unlink($zipFileFullPath); // Удаляем ZIP-файл после распаковки
+    unlink($zipFileFullPath);
 } else {
     die('Ошибка распаковки архива.');
 }
 
-// 5. Отображение содержимого из папки с идентификатором
-$files = scandir($outputDir);
-foreach ($files as $file) {
-    if ($file !== '.' && $file !== '..') {
-        $filePath = "{$outputDir}/{$file}";
-        if (is_file($filePath)) {
- // Выводим содержимое файлов
-            header('Content-Type: ' . mime_content_type($filePath));
-            readfile($filePath);
-        }
-    }
+// Проверяем наличие index.html или index.php
+$indexFilePathHtml = "{$outputDir}/index.html";
+$indexFilePathPhp = "{$outputDir}/index.php";
+
+if (file_exists($indexFilePathHtml)) {
+    $indexContent = file_get_contents($indexFilePathHtml);
+} elseif (file_exists($indexFilePathPhp)) {
+    $indexContent = file_get_contents($indexFilePathPhp);
+} else {
+    die('index.html или index.php не найден.');
 }
+
+// Заменяем пути к ресурсам
+$indexContent = str_replace('href="css/', 'href="' . $outputDir . '/css/', $indexContent);
+$indexContent = str_replace('src="js/', 'src="' . $outputDir . '/js/', $indexContent);
+$indexContent = str_replace('src="images/', 'src="' . $outputDir . '/images/', $indexContent);
+
+// Отправляем заголовки и выводим содержимое
+header('Content-Type: text/html; charset=utf-8');
+echo $indexContent;
 ?>
